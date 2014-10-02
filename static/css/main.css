@@ -9,7 +9,7 @@ body {
   width: calc(50% - 120px);
   float: left;
   height: calc(100% - 60px);
-  background: #fde3a7;
+  background: #fff;
   padding: 30px 60px;
   text-align: center;
   font-family: 'Roboto';
@@ -23,7 +23,7 @@ body {
 }
 #instructions code {
   background: rgba(0,0,0,0.1);
-  padding: 3px;
+  padding: 3px 5px;
   font-family: 'Droid Sans Mono';
   font-size: 12px;
 }

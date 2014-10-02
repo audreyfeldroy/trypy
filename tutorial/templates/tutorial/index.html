@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="Tutorial">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,34 +11,25 @@
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Roboto:400,300,300italic,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.3/angular.min.js"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>
+    <script src="{{ STATIC_URL }}djangular/js/django-angular.min.js" type="text/javascript"></script>
+    <script src="{% static 'js/controllers.js' %}"></script>
   </head>
   <body>
 
-    <div id="instructions">
+    <div id="instructions" ng-controller="TutorialController">
         <div id="challenge">
-            <h1>Got 15 minutes? Give Python a shot!</h3>
-            <p>Python is a programming language created by Guido von Rossum in 1990 and was named after the Brit-com Monty Python's Flying Circus.
-            Python is known best for the beauty of the code, readibility and low barrier of entry for beginners. </p>
-            <p>Here on the right you can try out all the features of Python. In addition, we will guide and show you all the awesomness
-                that is included in Python. The following commands are available:</p>
-            <ul>
-                <li><code>next</code> → Go to the next challenge</li>
-                <li><code>back</code> → Go to the previous challenge</li>
-                <li><code>clear</code> → Clear the prompt for more readability and speed</li>
-            </ul>
-            <p>To save the progress, simply bookmark the lesson you're currently on. Each lesson has its own URL address so you can pick
-                up wherever you left off.</p>
-
-            <h2>Ready?</h2>
-            Let's start! Type <code>next</code> in the box on the right and hit "Enter" to get started!
+            <h1>{$ instructions.title $}</h3>
+            <div ng-bind-html="instructions.description"></div>
         </div>
     </div>
 
-    <div id="interpreter">
+    <div id="interpreter" ng-controller="PromptController">
         <div id="output">Python ready.</div>
         <div id="input">
-            >>> <input type="text">
+            >>> <input type="text" ng-model="prompt" ng-keyup="runCode($event.keyCode)">
         </div>
     </div>
 
