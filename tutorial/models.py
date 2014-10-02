@@ -9,7 +9,7 @@ class Level(models.Model):
 
 
 class Challenge(models.Model):
-    level = models.ForeignKey(Level)
+    level = models.ForeignKey(Level, related_name='challenges')
     number = models.IntegerField()
     title = models.CharField(max_length=255)
     description = models.TextField()
