@@ -4,8 +4,11 @@ Pillow==2.5.3
 boto==2.32.1
 dj-database-url==0.3.0
 django-angular==0.7.8
+django-filter==0.8
+django-redis==3.7.1
 django-storages==1.1.8
 djangorestframework==2.4.3
 psycopg2==2.5.4
+redis==2.10.3
 six==1.8.0
 wsgiref==0.1.2
