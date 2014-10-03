@@ -36,13 +36,17 @@ body {
   font-family: 'Droid Sans Mono';
   color: #fff;
   line-height: 200%;
+  font-size: 13px;
+}
+#interpreter .error-true {
+  color: #f22613;
 }
 #interpreter input[type="text"] {
   background: #34495e;
   border: 0px;
   color: #fff;
   font-family: 'Droid Sans Mono';
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
   width: 90%;
   padding: 4px 0;

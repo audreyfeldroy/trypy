@@ -27,7 +27,11 @@
     </div>
 
     <div id="interpreter" ng-controller="PromptController">
-        <div id="output">Python ready.</div>
+        <div id="output">
+            <div ng-repeat="out in output" class="error-{$out.error$}">
+                {$out.text$}
+            </div>
+        </div>
         <div id="input">
             >>> <input type="text" ng-model="prompt" ng-keyup="runCode($event.keyCode)">
         </div>

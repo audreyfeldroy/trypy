@@ -7,6 +7,7 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
 
   $scope.currents = {'level': 1, 'challenge': 1};
 
+
   $http.get('/api/levels/.json').success(function(data) {
     $scope.levels = data;
   });
@@ -27,10 +28,15 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
 
 tutorialApp.controller('PromptController', function ($scope, $http) {
 
+  $scope.output = [{'text':'Python ready.', 'error':false}];
+
   $scope.runCode = function(keyCode){
     if (keyCode == 13) {
+
+      $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
       $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
-         console.log(data);
+         $scope.output.push(data);
+         $scope.prompt = '';
       });
     }
   }
