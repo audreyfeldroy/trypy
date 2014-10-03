@@ -29,7 +29,9 @@ tutorialApp.controller('PromptController', function ($scope, $http) {
 
   $scope.runCode = function(keyCode){
     if (keyCode == 13) {
-      
+      $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
+         console.log(data);
+      });
     }
   }
 
