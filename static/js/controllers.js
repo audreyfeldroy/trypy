@@ -58,6 +58,16 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
       $scope.prevChallenge();
   });
 
+  $scope.$on('checkOutput', function(event, args){
+      var output = args['output']['text'];
+      var is_error = args['output']['error'];
+      var pattern = new RegExp($scope.instructions.output_condition);
+
+      if (pattern.test(output.trim()) && is_error == $scope.instructions.output_is_error){
+          $scope.nextChallenge();
+      }
+  });
+
 });
 
 tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) {
@@ -75,6 +85,7 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
             $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
                 $scope.output.push(data);
                 $scope.prompt = '';
+                $rootScope.$broadcast('checkOutput', {'output': data});
             });
 
         } else {
