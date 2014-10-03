@@ -2,48 +2,61 @@ var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize']).c
   $interpolateProvider.startSymbol('{$').endSymbol('$}');
 });
 
-
 tutorialApp.controller('TutorialController', function ($scope, $http) {
 
+  $scope.nextChallenge = function(){
+    if ($scope.currents.challenge < $scope.challenges.length) {
+        $scope.currents.challenge += 1;
+    } else {
+        if ($scope.currents.level < $scope.levels.length) {
+            $scope.currents.level += 1;
+            $scope.currents.challenge = 1;
+        }
+    }
+    $scope.getCurrentChallenge();
+  };
+
+  $scope.getCurrentChallenge = function(){
+    $http.get('/api/challenges/'+$scope.currents.level+'/'+$scope.currents.challenge+'/.json').success(function(data) {
+      $scope.instructions = data;
+    });
+  };
+
   $scope.currents = {'level': 1, 'challenge': 1};
-
-
   $http.get('/api/levels/.json').success(function(data) {
     $scope.levels = data;
   });
-
-  $http.get('/api/levels/'+$scope.currents.level+'/.json').success(function(data) {
-    $scope.current_level = data;
-  });
-
   $http.get('/api/challenges/.json?level='+$scope.currents.level).success(function(data) {
     $scope.challenges = data;
   });
+  $scope.getCurrentChallenge();
 
-  $http.get('/api/challenges/'+$scope.currents.challenge+'/.json').success(function(data) {
-    $scope.instructions = data;
+  $scope.$on('goToNextChallenge', function(event, args) {
+      $scope.nextChallenge();
   });
 
 });
 
-tutorialApp.controller('PromptController', function ($scope, $http) {
-
-  $scope.output = [{'text':'Python ready.', 'error':false}];
-  $scope.history = [];
-  $scope.history_index = 0;
+tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) {
 
   $scope.runCode = function(keyCode){
 
     if (keyCode == 13) {
         $scope.resetHistoryIndex();
-        
-        // Running a command
-        $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
-        $scope.history.push($scope.prompt);
-        $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
-            $scope.output.push(data);
-            $scope.prompt = '';
-        });
+
+        if (!$scope.isBuiltinCommand($scope.prompt)){
+
+            // Running a command
+            $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
+            $scope.history.push($scope.prompt);
+            $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
+                $scope.output.push(data);
+                $scope.prompt = '';
+            });
+
+        } else {
+            $scope.runBuiltinCommand($scope.prompt);
+        }
     }
 
     else if (keyCode == 38){
@@ -76,5 +89,30 @@ tutorialApp.controller('PromptController', function ($scope, $http) {
   $scope.resetHistoryIndex = function(){
       $scope.history_index = 0;
   };
+
+  $scope.clearOutput = function(){
+      $scope.output = [{'text':'Python ready.', 'error':false}];
+  };
+
+  var BUILTINS = ['next', 'back', 'clear', 'help'];
+
+  $scope.isBuiltinCommand = function(command) {
+      if (BUILTINS.indexOf(command) > -1) {
+          return true;
+      }
+      return false;
+  }
+
+  $scope.runBuiltinCommand = function(command) {
+      if (command == 'next'){
+          $scope.clearOutput();
+          $scope.prompt = '';
+          $rootScope.$broadcast('goToNextChallenge', {});
+      }
+  }
+
+  $scope.clearOutput();
+  $scope.history = [];
+  $scope.history_index = 0;
 
 });

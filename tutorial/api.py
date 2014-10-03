@@ -1,4 +1,5 @@
 from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -55,3 +56,14 @@ class ChallengeDetail(generics.RetrieveAPIView):
     """
     queryset = Challenge.objects.all()
     serializer_class = ChallengeSerializer
+    multiple_lookup_fields = ['number', 'level__number']
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        filter = {}
+        for field in self.multiple_lookup_fields:
+            filter[field] = self.kwargs[field]
+
+        obj = get_object_or_404(queryset, **filter)
+        self.check_object_permissions(self.request, obj)
+        return obj

@@ -17,7 +17,7 @@ api_urlpatterns = patterns('tutorial.api',
     url(r'^api/levels/$', api.LevelList.as_view(), name='level_list'),
     url(r'^api/levels/(?P<pk>[0-9]+)/$', api.LevelDetail.as_view(), name='level_detail'),
     url(r'^api/challenges/$', api.ChallengeList.as_view(), name='challenge_list'),
-    url(r'^api/challenges/(?P<pk>[0-9]+)/$', api.ChallengeDetail.as_view(), name='challenge_detail'),
+    url(r'^api/challenges/(?P<level__number>[0-9]+)/(?P<number>[0-9]+)/$', api.ChallengeDetail.as_view(), name='challenge_detail'),
 )
 api_urlpatterns = format_suffix_patterns(api_urlpatterns)
 
