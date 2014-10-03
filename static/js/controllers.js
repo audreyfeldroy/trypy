@@ -29,16 +29,52 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
 tutorialApp.controller('PromptController', function ($scope, $http) {
 
   $scope.output = [{'text':'Python ready.', 'error':false}];
+  $scope.history = [];
+  $scope.history_index = 0;
 
   $scope.runCode = function(keyCode){
-    if (keyCode == 13) {
 
-      $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
-      $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
-         $scope.output.push(data);
-         $scope.prompt = '';
-      });
+    if (keyCode == 13) {
+        $scope.resetHistoryIndex();
+        
+        // Running a command
+        $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
+        $scope.history.push($scope.prompt);
+        $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
+            $scope.output.push(data);
+            $scope.prompt = '';
+        });
     }
-  }
+
+    else if (keyCode == 38){
+        $scope.historyUp();
+    }
+
+    else if (keyCode == 40){
+        $scope.historyDown();
+    }
+
+    else {
+        $scope.resetHistoryIndex();
+    }
+  };
+
+  $scope.historyUp = function(){
+      if ($scope.history_index < $scope.history.length && $scope.history_index + $scope.history.length >= 0){
+          $scope.history_index -= 1;
+          $scope.prompt = $scope.history[$scope.history.length + $scope.history_index];
+      }
+  };
+
+  $scope.historyDown = function(){
+      if ($scope.history_index < 0, $scope.history_index){
+          $scope.history_index += 1;
+          $scope.prompt = $scope.history[$scope.history.length + $scope.history_index];
+      }
+  };
+
+  $scope.resetHistoryIndex = function(){
+      $scope.history_index = 0;
+  };
 
 });
