@@ -11,6 +11,20 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
         if ($scope.currents.level < $scope.levels.length) {
             $scope.currents.level += 1;
             $scope.currents.challenge = 1;
+            $scope.getChallengesList();
+        }
+    }
+    $scope.getCurrentChallenge();
+  };
+
+  $scope.prevChallenge = function(){
+    if ($scope.currents.challenge > 1) {
+        $scope.currents.challenge -= 1;
+    } else {
+        if ($scope.currents.level > 1) {
+            $scope.currents.level -= 1;
+            $scope.getChallengesList();
+            $scope.currents.challenge = $scope.challenges.length;
         }
     }
     $scope.getCurrentChallenge();
@@ -22,17 +36,26 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
     });
   };
 
+  $scope.getChallengesList = function(){
+      $http.get('/api/challenges/.json?level='+$scope.currents.level).success(function(data) {
+        $scope.challenges = data;
+      });
+  }
+
   $scope.currents = {'level': 1, 'challenge': 1};
   $http.get('/api/levels/.json').success(function(data) {
     $scope.levels = data;
   });
-  $http.get('/api/challenges/.json?level='+$scope.currents.level).success(function(data) {
-    $scope.challenges = data;
-  });
+
+  $scope.getChallengesList();
   $scope.getCurrentChallenge();
 
   $scope.$on('goToNextChallenge', function(event, args) {
       $scope.nextChallenge();
+  });
+
+  $scope.$on('goToPrevChallenge', function(event, args) {
+      $scope.prevChallenge();
   });
 
 });
@@ -104,10 +127,15 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
   }
 
   $scope.runBuiltinCommand = function(command) {
+      $scope.clearOutput();
+      $scope.prompt = '';
+
       if (command == 'next'){
-          $scope.clearOutput();
-          $scope.prompt = '';
           $rootScope.$broadcast('goToNextChallenge', {});
+      }
+
+      if (command == 'back'){
+          $rootScope.$broadcast('goToPrevChallenge', {});
       }
   }
 
