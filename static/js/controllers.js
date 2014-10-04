@@ -1,8 +1,8 @@
-var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize', 'luegg.directives']).config(function($interpolateProvider) {
+var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize', 'luegg.directives', 'ngCookies']).config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{$').endSymbol('$}');
 });
 
-tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope, $location) {
+tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope, $location, $cookies) {
 
   $scope.nextChallenge = function(){
     if ($scope.currents.challenge < $scope.challenges.length) {
@@ -36,6 +36,7 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
     });
 
     $location.path('/level/'+$scope.currents.level+'/challenge/'+$scope.currents.challenge+'/');
+    $cookies.trypy_level = $scope.currents.level+"/"+$scope.currents.challenge;
   };
 
   $scope.getChallengesList = function(){
@@ -44,17 +45,22 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
       });
   }
 
-  if ($location.path() == ''){
-     $scope.currents = {'level': 1, 'challenge': 1};
-  } else {
-     // Reading current challenge from URL
-     pattern = new RegExp("level/\\d/challenge/\\d");
-     if (pattern.test($location.path())){
-         data = $location.path().split('/')
-         $scope.currents = {'level': data[2], 'challenge': data[4]};
-     } else {
-         $scope.currents = {'level': 1, 'challenge': 1};
-     }
+  $scope.findStartingPoint = function(){
+      // first look at URL
+      pattern = new RegExp("level/\\d/challenge/\\d");
+      if (pattern.test($location.path())){
+          data = $location.path().split('/')
+          $scope.currents = {'level': parseInt(data[2]), 'challenge': parseInt(data[4])};
+      } else {
+          // then look at cookies
+          if ($cookies.trypy_level) {
+              data = $cookies.trypy_level.split('/')
+              $scope.currents = {'level': parseInt(data[0]), 'challenge': parseInt(data[1])};
+          } else {
+              // if all falls, start at the beggining
+              $scope.currents = {'level': 1, 'challenge': 1};
+          }
+      }
   }
 
 
@@ -62,6 +68,7 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
     $scope.levels = data;
   });
 
+  $scope.findStartingPoint();
   $scope.getChallengesList();
   $scope.getCurrentChallenge();
 
