@@ -2,7 +2,7 @@ var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize']).c
   $interpolateProvider.startSymbol('{$').endSymbol('$}');
 });
 
-tutorialApp.controller('TutorialController', function ($scope, $http) {
+tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope) {
 
   $scope.nextChallenge = function(){
     if ($scope.currents.challenge < $scope.challenges.length) {
@@ -65,6 +65,7 @@ tutorialApp.controller('TutorialController', function ($scope, $http) {
 
       if (pattern.test(output.trim()) && is_error == $scope.instructions.output_is_error){
           $scope.nextChallenge();
+          $rootScope.$broadcast('printSuccess', {});
       }
   });
 
@@ -158,6 +159,10 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
           $scope.output = [{'text':HELP_TEXT, 'error':false}];
       }
   }
+
+  $scope.$on('printSuccess', function(event, args){
+     $scope.output.push({'text': 'Success!', 'error': 'success'});
+  });
 
   $scope.clearOutput();
   $scope.history = [];

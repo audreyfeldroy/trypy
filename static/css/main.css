@@ -41,6 +41,10 @@ body {
 #interpreter .error-true {
   color: #f22613;
 }
+#interpreter .error-success {
+  color: #2ecc71;
+  font-weight: bold;
+}
 #interpreter input[type="text"] {
   background: #34495e;
   border: 0px;
