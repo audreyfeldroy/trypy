@@ -135,10 +135,10 @@ else:
     CACHES = {
         'default': {
             'BACKEND': 'redis_cache.cache.RedisCache',
-            'LOCATION': '%s:%s' % (redis_url.hostname, redis_url.port),
+            'LOCATION': '%s:%s:0' % (redis_url.hostname, redis_url.port),
             'OPTIONS': {
-                'DB': 0,
                 'PASSWORD': redis_url.password,
+                'CLIENT_CLASS': 'redis_cache.client.DefaultClient',
             }
         }
     }
