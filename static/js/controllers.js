@@ -2,7 +2,7 @@ var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize']).c
   $interpolateProvider.startSymbol('{$').endSymbol('$}');
 });
 
-tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope) {
+tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope, $location) {
 
   $scope.nextChallenge = function(){
     if ($scope.currents.challenge < $scope.challenges.length) {
@@ -34,6 +34,8 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
     $http.get('/api/challenges/'+$scope.currents.level+'/'+$scope.currents.challenge+'/.json').success(function(data) {
       $scope.instructions = data;
     });
+
+    $location.path('/level/'+$scope.currents.level+'/challenge/'+$scope.currents.challenge+'/');
   };
 
   $scope.getChallengesList = function(){
@@ -42,7 +44,20 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
       });
   }
 
-  $scope.currents = {'level': 1, 'challenge': 1};
+  if ($location.path() == ''){
+     $scope.currents = {'level': 1, 'challenge': 1};
+  } else {
+     // Reading current challenge from URL
+     pattern = new RegExp("level/\\d/challenge/\\d");
+     if (pattern.test($location.path())){
+         data = $location.path().split('/')
+         $scope.currents = {'level': data[2], 'challenge': data[4]};
+     } else {
+         $scope.currents = {'level': 1, 'challenge': 1};
+     }
+  }
+
+
   $http.get('/api/levels/.json').success(function(data) {
     $scope.levels = data;
   });
