@@ -15,7 +15,8 @@
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>
-    <script src="{{ STATIC_URL }}djangular/js/django-angular.min.js" type="text/javascript"></script>
+    <script src="{% static 'djangular/js/django-angular.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/angular.scrollglue.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/controllers.js' %}"></script>
   </head>
   <body>
@@ -27,11 +28,9 @@
         </div>
     </div>
 
-    <div id="interpreter" ng-controller="PromptController">
+    <div id="interpreter" ng-controller="PromptController" scroll-glue>
         <div class="preloader" ng-show="loaderVisible">
-            <div class="flower">
-                Loading...
-            </div>
+            <div class="flower">Loading...</div>
         </div>
 
         <div id="output">

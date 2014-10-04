@@ -1,4 +1,4 @@
-var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize']).config(function($interpolateProvider) {
+var tutorialApp = angular.module('Tutorial', ['ng.django.forms','ngSanitize', 'luegg.directives']).config(function($interpolateProvider) {
   $interpolateProvider.startSymbol('{$').endSymbol('$}');
 });
 

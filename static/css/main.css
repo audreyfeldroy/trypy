@@ -37,6 +37,7 @@ body {
   color: #fff;
   line-height: 200%;
   font-size: 13px;
+  overflow-y: auto;
 }
 #interpreter .error-true {
   color: #f22613;
