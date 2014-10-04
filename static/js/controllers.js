@@ -148,6 +148,10 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
       if (command == 'back'){
           $rootScope.$broadcast('goToPrevChallenge', {});
       }
+
+      if (command == 'clear'){
+          $scope.clearOutput();
+      }
   }
 
   $scope.clearOutput();
