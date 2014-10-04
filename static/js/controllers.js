@@ -129,6 +129,7 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
   };
 
   var BUILTINS = ['next', 'back', 'clear', 'help'];
+  var HELP_TEXT = '<Enter Help Text here>';
 
   $scope.isBuiltinCommand = function(command) {
       if (BUILTINS.indexOf(command) > -1) {
@@ -151,6 +152,10 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
 
       if (command == 'clear'){
           $scope.clearOutput();
+      }
+
+      if (command == 'help'){
+          $scope.output = [{'text':HELP_TEXT, 'error':false}];
       }
   }
 
