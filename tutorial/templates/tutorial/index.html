@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div id="interpreter" ng-controller="PromptController" scroll-glue>
+    <div id="interpreter" ng-controller="PromptController" ng-click="focusPrompt()" scroll-glue>
         <div class="preloader" ng-show="loaderVisible">
             <div class="flower">Loading...</div>
         </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
         <div id="input">
-            >>> <input type="text" ng-model="prompt" ng-keyup="runCode($event.keyCode)" autofocus="true">
+            >>> <input type="text" id="prompt" ng-model="prompt" ng-keyup="runCode($event.keyCode)" autofocus="true">
         </div>
     </div>
 

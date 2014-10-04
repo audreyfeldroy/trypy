@@ -184,6 +184,10 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
       }
   }
 
+  $scope.focusPrompt = function(){
+      document.getElementById("prompt").focus();
+  };
+
   $scope.$on('printSuccess', function(event, args){
      $scope.output.push({'text': 'Success!', 'error': 'success'});
   });
