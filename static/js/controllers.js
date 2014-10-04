@@ -91,10 +91,11 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
   $scope.runCode = function(keyCode){
 
     if (keyCode == 13) {
+
         $scope.resetHistoryIndex();
 
         if (!$scope.isBuiltinCommand($scope.prompt)){
-
+            $scope.loaderVisible = true;
             // Running a command
             $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
             $scope.history.push($scope.prompt);
@@ -102,6 +103,7 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
                 $scope.output.push(data);
                 $scope.prompt = '';
                 $rootScope.$broadcast('checkOutput', {'output': data});
+                $scope.loaderVisible = false;
             });
 
         } else {

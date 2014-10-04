@@ -10,6 +10,7 @@
     <title>Try Python!</title>
     <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono|Roboto:400,300,300italic,400italic,500,500italic,700,700italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="https://raw.githubusercontent.com/necolas/normalize.css/master/normalize.css">
+    <link rel="stylesheet" href="http://css-spinners.com/css/spinner/flower.css" type="text/css">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
@@ -27,6 +28,12 @@
     </div>
 
     <div id="interpreter" ng-controller="PromptController">
+        <div class="preloader" ng-show="loaderVisible">
+            <div class="flower">
+                Loading...
+            </div>
+        </div>
+
         <div id="output">
             <div ng-repeat="out in output" class="error-{$out.error$}">
                 {$out.text$}
