@@ -35,11 +35,11 @@
 
         <div id="output">
             <div ng-repeat="out in output" class="error-{$out.error$}">
-                {$out.text$}
+                <pre>{$out.text$}</pre>
             </div>
         </div>
         <div id="input">
-            >>> <input type="text" id="prompt" ng-model="prompt" ng-keyup="runCode($event.keyCode)" autofocus="true">
+        {$prompt_char$} <input type="text" id="prompt" ng-model="prompt" ng-trim="false" ng-keydown="runCode($event)" autofocus="true">
         </div>
     </div>
 

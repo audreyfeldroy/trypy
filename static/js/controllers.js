@@ -95,26 +95,48 @@ tutorialApp.controller('TutorialController', function ($scope, $http, $rootScope
 
 tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) {
 
-  $scope.runCode = function(keyCode){
+  $scope.isMultiline = false;
+  $scope.multilines = [];
+  $scope.prompt = '';
+  $scope.prompt_char = '>>>';
 
-    if (keyCode == 13) {
+  $scope.runCode = function($event){
 
+    keyCode = $event.keyCode;
+
+    if (keyCode == 9){
+        // support for tabs
+        $event.preventDefault();
+        $scope.prompt += '    ';
+    }
+
+    else if (keyCode == 13) {
         $scope.resetHistoryIndex();
 
-        if (!$scope.isBuiltinCommand($scope.prompt)){
-            $scope.loaderVisible = true;
-            // Running a command
-            $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
-            $scope.history.push($scope.prompt);
-            $http.post('/run_code/', { 'command': $scope.prompt }).success(function(data){
-                $scope.output.push(data);
-                $scope.prompt = '';
-                $rootScope.$broadcast('checkOutput', {'output': data});
-                $scope.loaderVisible = false;
-            });
+        if ($scope.isMultiline && $scope.prompt != '') {
+            $scope.addToMultiline();
+        }
 
+        else if ($scope.prompt.slice(-1) == ':'){
+            $scope.startMultiline();
         } else {
-            $scope.runBuiltinCommand($scope.prompt);
+            if ($scope.isBuiltinCommand($scope.prompt)){
+
+                $scope.runBuiltinCommand($scope.prompt);
+            } else {
+                $scope.loaderVisible = true;
+                if ($scope.isMultiline && $scope.prompt == ''){
+                    cmd = $scope.multilines.join("\n");
+                    $scope.output.push({'text': '... '+$scope.prompt, 'error': false});
+                    $scope.runRegularCommand(cmd, '>>>');
+                    $scope.prompt_char = '>>>';
+                    $scope.isMultiline = false;
+                    $scope.multilines = [];
+                } else {
+                    $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
+                    $scope.runRegularCommand($scope.prompt, '>>>');
+                }
+            }
         }
     }
 
@@ -161,7 +183,7 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
           return true;
       }
       return false;
-  }
+  };
 
   $scope.runBuiltinCommand = function(command) {
       $scope.clearOutput();
@@ -182,6 +204,33 @@ tutorialApp.controller('PromptController', function ($scope, $http, $rootScope) 
       if (command == 'help'){
           $scope.output = [{'text':HELP_TEXT, 'error':false}];
       }
+  };
+
+  $scope.startMultiline = function(){
+      $scope.multilines.push($scope.prompt);
+      $scope.history.push($scope.prompt);
+      $scope.output.push({'text': '>>> '+$scope.prompt, 'error': false});
+      $scope.prompt = '';
+      $scope.prompt_char = '...';
+      $scope.isMultiline = true;
+  };
+
+  $scope.addToMultiline = function (){
+      $scope.multilines.push($scope.prompt);
+      $scope.history.push($scope.prompt);
+      $scope.output.push({'text': '... '+$scope.prompt, 'error': false});
+      console.log($scope.output);
+      $scope.prompt = '';
+  };
+
+  $scope.runRegularCommand = function(cmd) {
+      $scope.history.push(cmd);
+      $http.post('/run_code/', { 'command': cmd }).success(function(data){
+          $scope.output.push(data);
+          $scope.prompt = '';
+          $rootScope.$broadcast('checkOutput', {'output': data});
+          $scope.loaderVisible = false;
+      });
   }
 
   $scope.focusPrompt = function(){

@@ -39,12 +39,18 @@ body {
   font-size: 13px;
   overflow-y: auto;
 }
-#interpreter .error-true {
+#interpreter .error-true pre {
   color: #f22613;
 }
-#interpreter .error-success {
+#interpreter .error-success pre {
   color: #2ecc71;
   font-weight: bold;
+}
+#interpreter pre {
+  font-family: 'Droid Sans Mono';
+  color: #fff;
+  font-size: 13px;
+  margin: 0;
 }
 #interpreter input[type="text"] {
   background: #34495e;
