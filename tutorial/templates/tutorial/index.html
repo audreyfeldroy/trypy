@@ -16,6 +16,8 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.js"></script>
+    <script src="{% static 'js/bower_components/showdown/compressed/showdown.js' %}"></script>
+    <script src="{% static 'js/bower_components/angular-markdown-directive/markdown.js' %}"></script>
     <script src="{% static 'js/angular.scrollglue.js' %}" type="text/javascript"></script>
     <script src="{% static 'js/controllers.js' %}"></script>
   </head>
@@ -24,7 +26,7 @@
     <div id="instructions" ng-controller="TutorialController">
         <div id="challenge">
             <h1>{$ instructions.title $}</h3>
-            <div ng-bind-html="instructions.description"></div>
+            <div btf-markdown="instructions.description"></div>
         </div>
     </div>
 
